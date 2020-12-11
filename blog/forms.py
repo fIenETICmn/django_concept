@@ -4,11 +4,17 @@ from django.contrib.auth.forms import UserCreationForm
 
 
 class SignupForm(UserCreationForm):
-    email = forms.EmailField(max_length=200, help_text='enter valid email')
 
     class Meta:
         model = User
-        fields = ('username',)
+        fields = ('email',)
+
+
+class LoginForm(UserCreationForm):
+
+    class Meta:
+        model = User
+        fields = ('email',)
 
 
 class PostForm(forms.ModelForm):
