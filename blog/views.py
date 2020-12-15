@@ -1,8 +1,9 @@
 from django.shortcuts import render, redirect
-from .models import User, Post
+from .models import Post
 from django.utils import timezone
-from django.contrib.auth import login, authenticate
-from .forms import SignupForm, LoginForm, PostForm
+from django.contrib.auth import login, logout, authenticate
+from .forms import SignupForm
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 
 
 def post_list(request):
@@ -10,31 +11,44 @@ def post_list(request):
     return render(request, 'post_list.html', {'posts': posts})
 
 
+# Create your views here.
 def signup(request):
     if request.method == 'POST':
-        form = SignupForm(request.POST)
+        form = UserCreationForm(request.POST)
         if form.is_valid():
-            form.save()
-            username = form.cleaned_data.get('username')
-            raw_password = form.cleaned_data.get('password1')
-            user = authenticate(username=username, password=raw_password)
-            login(request, user)
-            return redirect('login')
-    else:
-        form = SignupForm()
-    return render(request, 'signup.html', {'form': form})
-
-
-def login(request):
-    if request.method == 'POST':
-        form = LoginForm(request.POST)
-        if form.is_valid():
-            form.save()
-            username = form.cleaned_date.get('username')
-            raw_password = form.cleaned_date.get('password')
-            user = authenticate(username=username, password=raw_password)
+            user = form.save()
             login(request, user)
             return redirect('post_list')
     else:
-        form = LoginForm()
+        form = UserCreationForm()
+    return render(request, 'signup.html', {'form': form})
+
+
+def login_view(request):
+    if request.method == 'POST':
+        form = AuthenticationForm(data=request.POST)
+        if form.is_valid():
+            return redirect('post_list')
+    else:
+        form = AuthenticationForm()
     return render(request, 'login.html', {'form': form})
+
+
+def logout_view(request):
+    if request.method == 'POST':
+        logout(request)
+        return redirect('posts:list')
+
+# def signup(request):
+#     if request.method == 'POST':
+#         form = SignupForm(request.POST)
+#         if form.is_valid():
+#             form.save()
+#             email = form.cleaned_data.get('email')
+#             raw_password = form.cleaned_data.get('password1')
+#             user = authenticate(email=email, password=raw_password)
+#             login(request, user)
+#             return redirect('post_list')
+#     else:
+#         form = SignupForm()
+#     return render(request, 'signup.html', {'form': form})
