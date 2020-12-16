@@ -3,15 +3,16 @@
         <title>mysite_blog</title>
     </head>
     <body>
+    <a href="{% url 'home' %}">Home</a>
     <nav class="mb-3">
     {% if user.is_authenticated %}
-        <form action="{% url 'accounts:logout' %}" method="post">
+        <form action="{% url 'logout_view' %}" method="post">
             {% csrf_token %}
             <button class="btn btn-primary btn-sm" type="submit">Log Out</button>
         </form>
     {% endif %}
 </nav>
-
+    <br>
            {% block content %}
             {% endblock %}
     </body>

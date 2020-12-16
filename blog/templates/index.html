@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+        {% block content %}
+        <h4>List of models and forms</h4>
+
+<br>
+    <a href="{% url 'signup' %}">Signup</a>
+<br>
+<a href="{% url 'login_view' %}">Login</a>
+<br>
+<a href="{% url 'post_list' %}">List of post</a>  &nbsp; <a href="{% url 'add_post' %}">Add post</a>
+<br>
+<a href="{% url 'product_list' %}">List of Product</a> &nbsp; <a href="{% url 'add_product' %}">Add product</a>
+{% endblock %}

@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block content %}
+        <h4>List of Product</h4>
+            {% for pro in products %}
+                <div class="post">
+
+                        <h2>{{ pro.name }}</h2>
+                        <img height="70" width="70" src="/media/{{ pro.image }}" >
+                        <p>{{ pro.price|linebreaksbr }}</p>
+                        <p>{{ pro.description|linebreaksbr }}</p>
+                        <p>{{ pro.category|linebreaksbr }}</p>
+                </div>
+            {% endfor %}
+{% endblock %}
