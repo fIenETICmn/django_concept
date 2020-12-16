@@ -44,6 +44,7 @@ class Post(models.Model):
 
 
 class Category(models.Model):
+    objects = None
     id = models.AutoField(primary_key=True)
     categoryname = models.CharField(max_length=120)
     slug = models.SlugField(max_length=40)
