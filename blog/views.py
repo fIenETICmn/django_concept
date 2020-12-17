@@ -1,10 +1,11 @@
 from django.shortcuts import render, redirect
-from .models import Post, Product
+from .models import Post, Product, Store
 from django.utils import timezone
 from django.contrib.auth import login, logout, authenticate
-from .forms import SignupForm, ProductForm, PostForm
+from .forms import SignupForm, ProductForm, PostForm, StoreForm
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.decorators import login_required
+from django.db.models import Q
 
 
 def home(request):
@@ -49,6 +50,31 @@ def add_product(request):
     return render(request, 'add_product.html', {'form': form})
 
 
+def store_list(request):
+    storelist = Store.objects.all()
+    return render(request, 'store_list.html', {'storelist': storelist})
+
+
+def add_store(request):
+    if request.method == "POST":
+        form = StoreForm(request.POST)
+        if form.is_valid():
+            store = form.save(commit=False)
+            # store.author = request.user
+            store.save()
+            return redirect('store_list')
+    else:
+        form = StoreForm()
+    return render(request, 'add_store.html', {'form': form})
+
+
+def store_product_list(request):
+    # storel = Store.objects.get(id=id)
+    # store_product = Product.objects.filter(store=storel)
+    store_product = Store.objects.filter(product__id=id)
+    return render(request, 'store_list.html', {'store_product': store_product})
+
+
 def login_view(request):
     if request.method == 'POST':
         form = AuthenticationForm(data=request.POST)
@@ -62,9 +88,7 @@ def login_view(request):
 def signup(request):
     if request.method == 'POST':
         form = SignupForm(request.POST)
-        print(form)
         if form.is_valid():
-            print("form", form)
             form.save()
             email = form.cleaned_data.get('email')
             raw_password = form.cleaned_data.get('password1')

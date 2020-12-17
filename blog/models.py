@@ -53,6 +53,16 @@ class Category(models.Model):
         return self.categoryname
 
 
+class Store(models.Model):
+    objects = None
+    id = models.AutoField(primary_key=True)
+    storename = models.CharField(max_length=120)
+    storeaddress = models.CharField(max_length=200)
+
+    def __str__(self):
+        return self.storename
+
+
 class Product(models.Model):
     objects = None
     id = models.AutoField(primary_key=True)
@@ -62,6 +72,7 @@ class Product(models.Model):
     price = models.IntegerField()
     description = models.TextField(max_length=500)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    store = models.ForeignKey(Store, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.name

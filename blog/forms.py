@@ -1,5 +1,5 @@
 from django import forms
-from .models import User, Post, Product, Category
+from .models import User, Post, Product, Category, Store
 from django.contrib.auth.forms import UserCreationForm
 
 
@@ -31,3 +31,9 @@ class ProductForm(forms.ModelForm):
     class Meta:
         model = Product
         fields = ('name', 'image', 'price', 'description', 'category')
+
+
+class StoreForm(forms.ModelForm):
+    class Meta:
+        model = Store
+        fields = ('__all__')
