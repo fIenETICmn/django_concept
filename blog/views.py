@@ -68,11 +68,13 @@ def add_store(request):
     return render(request, 'add_store.html', {'form': form})
 
 
-def store_product_list(request):
-    # storel = Store.objects.get(id=id)
+def store_product_list(request, pk):
+    storel = Store.objects.filter(id=pk)
+    print(storel)
     # store_product = Product.objects.filter(store=storel)
-    store_product = Store.objects.filter(product__id=id)
-    return render(request, 'store_list.html', {'store_product': store_product})
+    # store_product = Store.objects.filter(product__id=id)
+    store_product = Product.objects.filter(store=storel)
+    return render(request, 'store_product_list.html', {'store_product': store_product})
 
 
 def login_view(request):

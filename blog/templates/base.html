@@ -5,6 +5,9 @@
     <body>
     <nav class="mb-3">
          <a href="{% url 'home' %}">Home</a>
+        <br>
+                <br>
+
     {% if user.is_authenticated %}
         <form action="{% url 'logout_view' %}" method="post">
             {% csrf_token %}

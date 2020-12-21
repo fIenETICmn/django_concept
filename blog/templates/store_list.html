@@ -4,7 +4,7 @@
         <h4>List of store</h4>
             {% for st in storelist %}
                 <div class="post">
-                        <a href="{% url 'store_product_list' %}" name="query" id="query">
+                        <a href="{% url 'store_product_list' st.pk %}">
                             {{ st.storename|linebreaksbr}}</a>
                 </div>
             {% endfor %}
