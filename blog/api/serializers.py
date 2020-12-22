@@ -17,13 +17,13 @@ class PostSerializer(serializers.HyperlinkedModelSerializer):
 class CategorySerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Category
-        fields = ('categoryname',)
+        fields = ('categoryname', 'slug', 'id', 'url',)
 
 
 class StoreSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Store
-        fields = ('storename', 'storeaddress',)
+        fields = ('storename', 'storeaddress', 'id', 'url',)
 
 
 class ProductSerializer(serializers.HyperlinkedModelSerializer):
