@@ -3,13 +3,15 @@
 {% block content %}
         <h4>List of Product</h4>
             {% for pro in products %}
-                <div class="post">
-
+<!--                <div class="post">-->
                         <h2>{{ pro.name }}</h2>
-                        <img height="70" width="70" src="/media/{{ pro.image }}" >
+                     {% for image in pro.product_images.all %}
+                            <img height="70" width="70" alt="" src="{{ image.image.url }}">
+                    {% endfor %}
+<!--                        <img height="70" width="70" src="{{ image.image.url }}" >-->
                         <p>{{ pro.price|linebreaksbr }}</p>
                         <p>{{ pro.description|linebreaksbr }}</p>
                         <p>{{ pro.category|linebreaksbr }}</p>
-                </div>
+<!--                </div>-->
             {% endfor %}
 {% endblock %}
