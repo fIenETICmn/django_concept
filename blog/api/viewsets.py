@@ -1,7 +1,8 @@
-from blog.models import User, Post, Category, Product
-from blog.api.serializers import UserSerializer, PostSerializer, CategorySerializer, ProductSerializer
+from blog.models import User, Post, Category, Store, Product, Productimage
+from blog.api.serializers import UserSerializer, PostSerializer, CategorySerializer, \
+    StoreSerializer, ProductSerializer, ProductimageSerializer
 from rest_framework import viewsets
-from rest_framework import permissions
+# from rest_framework import permissions
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -19,6 +20,16 @@ class CategoryViewSet(viewsets.ModelViewSet):
     serializer_class = CategorySerializer
 
 
+class StoreViewSet(viewsets.ModelViewSet):
+    queryset = Store.objects.all()
+    serializer_class = StoreSerializer
+
+
 class ProductViewSet(viewsets.ModelViewSet):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
+
+
+class ProductimageViewSet(viewsets.ModelViewSet):
+    queryset = Productimage.objects.all()
+    serializer_class = ProductimageSerializer

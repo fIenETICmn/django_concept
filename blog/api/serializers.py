@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from blog.models import User, Post, Category, Product
+from blog.models import User, Post, Category, Store, Product, Productimage
 
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
@@ -20,9 +20,25 @@ class CategorySerializer(serializers.HyperlinkedModelSerializer):
         fields = ('categoryname',)
 
 
+class StoreSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = Store
+        fields = ('storename', 'storeaddress',)
+
+
 class ProductSerializer(serializers.HyperlinkedModelSerializer):
+    author = UserSerializer()
     category = CategorySerializer()
+    store = StoreSerializer()
 
     class Meta:
         model = Product
-        fields = ('name', 'price', 'description', 'category',)
+        fields = ('author', 'name', 'price', 'description', 'category', 'store', 'id', 'url',)
+
+
+class ProductimageSerializer(serializers.HyperlinkedModelSerializer):
+    product = ProductSerializer()
+
+    class Meta:
+        model = Productimage
+        fields = ('product', 'image', 'id', 'url',)

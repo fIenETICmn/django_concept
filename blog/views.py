@@ -3,9 +3,9 @@ from .models import Post, Product, Store
 from django.utils import timezone
 from django.contrib.auth import login, logout, authenticate
 from .forms import SignupForm, ProductForm, PostForm, StoreForm
-from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.decorators import login_required
-from django.db.models import Q
+# from django.db.models import Q
 
 
 def home(request):

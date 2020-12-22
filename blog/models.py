@@ -2,7 +2,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.utils.translation import ugettext_lazy as _
 from django.utils import timezone
-from django.contrib.auth import settings
+# from django.contrib.auth import settings
 
 
 class User(AbstractUser):
@@ -79,6 +79,8 @@ class Product(models.Model):
 
 
 class Productimage (models.Model):
+    objects = None
+    id = models.AutoField(primary_key=True)
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name="product_images")
     image = models.ImageField(upload_to='media/', blank=True)
 

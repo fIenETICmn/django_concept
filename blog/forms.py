@@ -27,20 +27,20 @@ class CategoryForm(forms.ModelForm):
         fields = ('categoryname',)
 
 
-class ProductimageForm(forms.ModelForm):
+class StoreForm(forms.ModelForm):
     class Meta:
-        model = Productimage
-        fields = '__all__'
+        model = Store
+        fields = ('storename', 'storeaddress',)
 
 
 class ProductForm(forms.ModelForm):
 
     class Meta:
         model = Product
-        fields = ('name', 'price', 'description', 'category',)
+        fields = ('author', 'name', 'price', 'description', 'category', 'store',)
 
 
-class StoreForm(forms.ModelForm):
+class ProductimageForm(forms.ModelForm):
     class Meta:
-        model = Store
-        fields = ('__all__')
+        model = Productimage
+        fields = ('product', 'image',)
