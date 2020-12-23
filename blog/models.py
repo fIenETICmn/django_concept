@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.utils.translation import ugettext_lazy as _
 from django.utils import timezone
+import math
 # from django.contrib.auth import settings
 
 
@@ -86,6 +87,38 @@ class Productimage (models.Model):
 
     def __str__(self):
         return f'{self.product.name} image'
+
+
+class Cart(models.Model):
+    objects = None
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    item = models.ForeignKey(Product, on_delete=models.CASCADE)
+    quantity = models.IntegerField(default=1)
+    price = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f'{self.quantity} of {self.item.name}'
+
+    def get_total(self):
+        return self.item.price * self.quantity
+        floattotal = float("{0:.2f}".format(total))
+        return floattotal
+
+
+class Order(models.Model):
+    objects = None
+    orderitems = models.ManyToManyField(Cart)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    ordered = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.user.username
+
+    def get_totals(self):
+        total = 0
+        for order_item in self.orderitems.all():
+            total += order_item.get_total()
+        return total
 
 
 # only one object will be created for this model as save method is overrod

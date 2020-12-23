@@ -5,10 +5,18 @@ from . import views
 
 urlpatterns = [
     path('', views.home, name='home'),
+    # Post URL
     path('post_list/', views.post_list, name='post_list'),
     path('add_post/', views.add_post, name='add_post'),
+    # Product URL
     path('product_list/', views.product_list, name='product_list'),
     path('add_product/', views.add_product, name='add_product'),
+    path('filter_product/', views.filter_product, name='filter_product'),
+    path('add_to_cart/<int:pk>/', views.add_to_cart, name='add_to_cart'),
+    # Category URL
+    path('category_list/', views.category_list, name='category_list'),
+    path('category_product_list/<int:pk>/', views.category_product_list, name='category_product_list'),
+    # Store URL
     path('store_list/', views.store_list, name='store_list'),
     path('add_store/', views.add_store, name='add_store'),
     path('store_product_list/<int:pk>/', views.store_product_list, name='store_product_list'),
