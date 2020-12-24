@@ -99,6 +99,24 @@ def add_to_cart(request, pk):
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 
+def cart_view(request):
+    user = request.user
+    carts = Cart.objects.filter(user=user, price=False)
+    orders = Order.objects.filter(user=user, ordered=False)
+    if carts.exists():
+        if orders.exists():
+            order = orders[0]
+            return render(request, 'cart.html', {'carts': carts, 'order': order})
+        else:
+            messages.warning(request, "You do not have any item in your wishlist")
+            return redirect('product_list')
+    else:
+        messages.warning(request, "You do not have any item in your wishlist")
+        return redirect('product_list')
+
+    return render(request, 'cart.html', {'carts': carts})
+
+
 def store_list(request):
     storelist = Store.objects.all()
     return render(request, 'store_list.html', {'storelist': storelist})
