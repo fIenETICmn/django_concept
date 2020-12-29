@@ -2,7 +2,6 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.utils.translation import ugettext_lazy as _
 from django.utils import timezone
-import math
 # from django.contrib.auth import settings
 
 
@@ -121,7 +120,33 @@ class Order(models.Model):
         return total
 
 
-# only one object will be created for this model as save method is overrod
+class Wish(models.Model):
+    item = models.ForeignKey(Product, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    quantity = models.IntegerField(default=1)
+
+    def __str__(self):
+        return self.item.name
+
+    def get_wish_total(self):
+        return self.item.price * self.quantity
+        floattotal = float("{0:.2f}".format(total))
+        return floattotal
+
+
+class BillingAddress(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    name = models.CharField(max_length=100)
+    address = models.CharField(max_length=100)
+    zipcode = models.CharField(max_length=50)
+    city = models.CharField(max_length=30)
+    landmark = models.CharField(max_length=20)
+
+    def __str__(self):
+        return f'{self.user.email} billing address'
+
+
+# only one object will be created for this model as save method is override
 class Origin(models.Model):
     objects = None
     id = models.AutoField(primary_key=True)
