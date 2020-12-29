@@ -1,4 +1,4 @@
-from .models import Post, Product, Store, Cart, Order, Category
+from .models import Post, Product, Store, Cart, Order, Category, Wish
 from django.utils import timezone
 from django.contrib.auth import login, logout, authenticate
 from .forms import SignupForm, ProductForm, PostForm, StoreForm
@@ -74,6 +74,41 @@ def filter_product(request):
         fill_products = Product.objects.filter().order_by('-price')
     # print(Products.query)
     return render(request, 'product_list.html', {'fill_products': fill_products})
+
+
+def add_to_wishlist(request,pk):
+    user=request.user
+    items = get_object_or_404(Product,pk=pk)
+    wished_item,created = Wish.objects.get_or_create(item=items, pk=items.pk, user=user,)
+    messages.info(request,'The item was added to your wishlist')
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+
+@login_required
+def wishlist_view(request):
+    user = request.user
+    productw = Product.objects.filter(author=user, price=False)
+    wishs = Wish.objects.filter(user=user)
+    if wishs.exists():
+        if wishs.exists():
+            wish = wishs[0]
+            return render(request,'wishlist.html', {'productw': productw, 'wishs': wishs})
+        else:
+            messages.warning(request, "You do not have any item in your Cart")
+            return redirect("product_list")
+    else:
+        messages.warning(request, "You do not have any item in your Cart")
+        return redirect("product_list")
+
+    return render(request, 'wishlist.html',{'wishs':wishs})
+
+
+@login_required
+def remove_wish(request,pk):
+    item=get_object_or_404(Product,pk=pk)
+    remove_list=Wish.objects.filter(item=item.pk,user=request.user)
+    remove_list.delete()
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 
 def add_to_cart(request, pk):

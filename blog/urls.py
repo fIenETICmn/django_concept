@@ -15,6 +15,10 @@ urlpatterns = [
     # Category URL
     path('category_list/', views.category_list, name='category_list'),
     path('category_product_list/<int:pk>/', views.category_product_list, name='category_product_list'),
+    # wishlist URL
+    path('add_to_wishlist/<int:pk>', views.add_to_wishlist, name='add_to_wishlist'),
+	path('wishlist_view/', views.wishlist_view, name='wishlist_view'),
+	path('remove_wish/<int:pk>', views.remove_wish, name='remove_wish'),
     # add_to_cart URL
     path('add_to_cart/<int:pk>', views.add_to_cart, name='add_to_cart'),
     path('cart_view/', views.cart_view, name='cart_view'),
