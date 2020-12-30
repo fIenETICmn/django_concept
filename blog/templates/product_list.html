@@ -16,6 +16,7 @@
                         <p>{{ pro.description|linebreaksbr }}</p>
                         <p>{{ pro.category|linebreaksbr }}</p>
                          <a href="{% url 'add_to_cart' pro.pk %}">Add to Cart</a>
+                        <a href="{% url 'add_to_wishlist' pro.pk %}">Add to Wishlist</a>
             {% endfor %}
 
 <!-- product-list filter  in minimum and maximum rs of product for all products -->
@@ -29,6 +30,7 @@
                         <p>{{ fill.description|linebreaksbr }}</p>
                         <p>{{ fill.category|linebreaksbr }}</p>
                          <a href="{% url 'add_to_cart' fill.pk %}">Add to Cart</a>
+                        <a href="{% url 'add_to_wishlist' fill.pk %}">Add to Wishlist</a>
             {% endfor %}
 
 {% endblock %}

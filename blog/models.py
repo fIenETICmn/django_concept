@@ -120,6 +120,24 @@ class Order(models.Model):
             total += order_item.get_total()
         return total
 
+    def get_percentage(self):
+        total = 0
+        p = 0
+        for order_item in self.orderitems.all():
+            total += order_item.get_total()
+            p = total * 0.08
+            floattotal = float("{0:.2f}".format(p))
+        return floattotal
+
+    def all_total(self):
+        total = 0
+        p = 0
+        for order_item in self.orderitems.all():
+            total += order_item.get_total()
+            p = total * 0.08 + total
+            floattotal = float("{0:.2f}".format(p))
+        return floattotal
+
 
 class Wish(models.Model):
     item = models.ForeignKey(Product, on_delete=models.CASCADE)

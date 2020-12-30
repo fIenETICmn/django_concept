@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block content %}
+      <h2>Checkout</h2>
+                <table class="table table-bordered table-hover">
+                  <thead>
+                    <tr>
+                      <td class="text-left">Product Name</td>
+                      <td class="text-left">Category</td>
+                      <td class="text-right">Unit Price</td>
+                      <td class="text-right">Total</td>
+                    </tr>
+                  </thead>
+                  <tbody>
+            {% for item in order_items %}
+                    <tr>
+                      <td class="text-left"><a href="">{{item.item.name}}</a></td>
+                      <td class="text-right">{{item.category}}</td>
+                      <td class="text-right">{{item.item.price}}</td>
+                      <td class="text-right">{{item.get_total}}</td>
+                    </tr>
+                    {% endfor %}
+                  </tbody>
+                  <tfoot>
+                    <tr>
+                      <td class="text-right" colspan="4"><strong>Sub-Total:</strong></td>
+                      <td class="text-right">{{ get_total | floatformat:2 }}</td>
+                    </tr>
+                    <tr>
+                      <td class="text-right" colspan="4"><strong>Tax(9%):</strong></td>
+                      <td class="text-right">{{ get_perse | floatformat:2 }}</td>
+
+                    </tr>
+                    <tr>
+                      <td class="text-right" colspan="4"><strong>Total:</strong></td>
+                      <td class="text-right">{{ order_total | floatformat:2}}</td>
+                    </tr>
+                  </tfoot>
+                </table>
+{% endblock %}

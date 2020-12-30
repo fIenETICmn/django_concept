@@ -1,19 +1,30 @@
-from .models import Post, Product, Store, Cart, Order, Category, Wish
+from .models import Post, Product, Store, Cart, Order, Category, Wish, BillingAddress
 from django.utils import timezone
 from django.contrib.auth import login, logout, authenticate
-from .forms import SignupForm, ProductForm, PostForm, StoreForm
+from .forms import SignupForm, ProductForm, PostForm, StoreForm, BillingForm
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
 from django.contrib import messages
 from django.shortcuts import render, redirect, get_object_or_404
-
-
-# from django.db.models import Q
+from django.db.models import Q
 
 
 def home(request):
     return render(request, 'index.html')
+
+
+def search(request):
+    query = request.GET['query']
+    if len(query) > 50:
+        allpost = Product.objects.none()
+    else:
+        allpost = Product.objects.filter(Q(name__icontains=query)|
+                                        Q(category__categoryname__icontains=query)|
+                                        Q(description__icontains=query))
+    if allpost.count() == 0:
+        messages.error(request, 'can not found')
+    return render(request, 'search.html', {'allpost': allpost, 'query': query})
 
 
 def post_list(request):
@@ -77,7 +88,7 @@ def filter_product(request):
 
 
 def add_to_wishlist(request,pk):
-    user=request.user
+    user = request.user
     items = get_object_or_404(Product,pk=pk)
     wished_item,created = Wish.objects.get_or_create(item=items, pk=items.pk, user=user,)
     messages.info(request,'The item was added to your wishlist')
@@ -150,6 +161,97 @@ def cart_view(request):
         return redirect('product_list')
 
     return render(request, 'cart.html', {'carts': carts})
+
+
+def delete_cart(request, pk):
+    item=get_object_or_404(Product, pk=pk)
+    order_qs=Order.objects.filter(user=request.user, ordered=False)
+    if order_qs.exists():
+        order=order_qs[0]
+        #check if the order item is the order
+        if order.orderitems.filter(item=item.pk).exists():
+            order_item=Cart.objects.filter(item=item, user=request.user)[0]
+            order.orderitems.remove(order_item)
+            order_item.delete()
+            messages.warning(request, f"{item.name} has removed from your cart.")
+            messages.info(request, f"{item.name} quantity has updated.")
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+        else:
+            messages.info(request, f"{item.name} Your item is not delete")
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    else:
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+
+def decreaseCart(request, pk):
+    item = get_object_or_404(Product, pk=pk)
+    order_qs = Order.objects.filter(user=request.user, ordered=False)
+    if order_qs.exists():
+        order = order_qs[0]
+        #check if the order item is in the order
+        if order.orderitems.filter(item=item.pk).exists():
+            order_item=Cart.objects.filter(item=item, user=request.user)[0]
+            if order_item.quantity > 1:
+                order_item.quantity -= 1
+                order_item.save()
+            else:
+                order.orderitems.remove(order_item)
+                order_item.delete()
+                messages.warning(request, f"{item.name} has removed frpm your cart.")
+            messages.info(request, f"{item.name} quantity has updated.")
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+        else:
+            messages.info(request, f"{item.name} quantity has updated.")
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    else:
+        messages.info(request, "You do not have an active order")
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+
+def checkout(request):
+    form = BillingForm
+
+    order_qs = Order.objects.filter(user=request.user, ordered=False)
+    order_items = order_qs[0].orderitems.all()
+    order_total = order_qs[0].all_total()
+    get_total = order_qs[0].get_totals()
+    get_perse = order_qs[0].get_percentage()
+
+    context = {"form": form,
+               "order_items": order_items,
+               "order_total": order_total,
+               "get_total": get_total,
+               "get_perse": get_perse
+               }
+
+    # Getting the saved saved_address
+    saved_address = BillingAddress.objects.filter(user=request.user)
+    if saved_address.exists():
+        savedAddress = saved_address.first()
+        context = {"form": form,
+                   "order_items": order_items,
+                   "order_total": order_total,
+                   "savedAddress": savedAddress
+                   }
+
+    if request.method == "POST":
+        saved_address = BillingAddress.objects.filter(user=request.user)
+        if saved_address.exists():
+
+            savedAddress = saved_address.first()
+            form = BillingForm(request.POST, instance=savedAddress)
+            if form.is_valid():
+                billingaddress = form.save(commit=False)
+                billingaddress.user = request.user
+                billingaddress.save()
+        else:
+            form = BillingForm(request.POST)
+            if form.is_valid():
+                billingaddress = form.save(commit=False)
+                billingaddress.user = request.user
+                billingaddress.save()
+
+    return render(request, 'checkout.html', context)
 
 
 def store_list(request):

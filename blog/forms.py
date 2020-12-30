@@ -1,5 +1,5 @@
 from django import forms
-from .models import User, Post, Product, Category, Store, Productimage
+from .models import User, Post, Product, Category, Store, Productimage, BillingAddress
 from django.contrib.auth.forms import UserCreationForm
 
 
@@ -44,3 +44,10 @@ class ProductimageForm(forms.ModelForm):
     class Meta:
         model = Productimage
         fields = ('product', 'image',)
+
+
+class BillingForm(forms.ModelForm):
+
+    class Meta:
+        model = BillingAddress
+        fields = ['address', 'zipcode', 'city', 'landmark']
