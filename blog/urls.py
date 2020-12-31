@@ -13,6 +13,10 @@ urlpatterns = [
     path('product_list/', views.product_list, name='product_list'),
     path('add_product/', views.add_product, name='add_product'),
     path('filter_product/', views.filter_product, name='filter_product'),
+    path('user_product/', views.user_product, name='user_product'),
+    path('product_publish/<int:pk>', views.product_publish, name='product_publish'),
+    # path('product/<int:pk>/edit/', views.product_edit, name='product_edit'),
+    # path('product_del/<int:pk>/', views.product_del, name='product_del'),
     # Category URL
     path('category_list/', views.category_list, name='category_list'),
     path('category_product_list/<int:pk>/', views.category_product_list, name='category_product_list'),
@@ -26,6 +30,7 @@ urlpatterns = [
     path('delete_cart/<int:pk>/', views.delete_cart, name='delete_cart'),
     path('decreaseCart/<int:pk>/', views.decreaseCart, name='decreaseCart'),
     path('checkout/', views.checkout, name='checkout'),
+    path('payment/', views.payment, name="payment"),
     # Store URL
     path('store_list/', views.store_list, name='store_list'),
     path('add_store/', views.add_store, name='add_store'),

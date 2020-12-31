@@ -65,6 +65,26 @@ def add_product(request):
     return render(request, 'add_product.html', {'form': form})
 
 
+@login_required
+def user_product(request):
+    userproduct = Product.objects.filter(Q(author=request.user))
+    #print(posts.query)
+    return render(request, 'user_product.html', {'userproduct': userproduct})
+
+
+def product_publish(request,pk):
+    post =Product.objects.get(pk=pk)
+    if post.published== 0:
+        post.published= 1
+        post.save()
+        messages.info(request,'product is published')
+    elif post.published== 1:
+        post.published= 0
+        post.save()
+        messages.info(request,'product is unpublished')
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+
 def category_list(request):
     categorylist = Category.objects.all()
     return render(request, 'category_list.html', {'categorylist': categorylist})
@@ -252,6 +272,22 @@ def checkout(request):
                 billingaddress.save()
 
     return render(request, 'checkout.html', context)
+
+
+def payment(request):
+    key = settings.STRIPE_PUBLISHABLE_KEY
+    order_qs = Order.objects.filter(user=request.user, ordered=False)
+    order_total = order_qs[0].all_total()
+    totalCents = float(order_total * 100);
+    total = round(totalCents, 2)
+    if request.method == 'POST':
+        charge = stripe.Charge.create(amount=total,
+                                      currency='usd',
+                                      description=order_qs,
+                                      source=request.POST['stripeToken'])
+        print(charge)
+
+    return render(request, 'payment.html', {"key": key, "total": total})
 
 
 def store_list(request):

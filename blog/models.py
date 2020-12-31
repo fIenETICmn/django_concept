@@ -73,6 +73,7 @@ class Product(models.Model):
     description = models.TextField(max_length=500)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     store = models.ForeignKey(Store, on_delete=models.CASCADE)
+    published=models.BooleanField(default=False)
 
     def __str__(self):
         return self.name
