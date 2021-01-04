@@ -1,7 +1,7 @@
 from django.urls import path, include
 from rest_framework.urlpatterns import format_suffix_patterns
-# from blog.api.viewsets import UserViewSet, PostViewSet, CategoryViewSet, StoreViewSet, ProductViewSet,\
-#     ProductimageViewSet
+from blog.api.viewsets import UserViewSet, PostViewSet, CategoryViewSet, StoreViewSet, ProductViewSet,\
+    ProductimageViewSet, HelloView
 from blog.api import viewsets
 from rest_framework.routers import DefaultRouter
 
@@ -19,5 +19,6 @@ router.register(r'productsimages', viewsets.ProductimageViewSet)
 # API endpoints
 urlpatterns = format_suffix_patterns([
     path('', include(router.urls)),
+    path('hello/', viewsets.HelloView.as_view(), name='hello'),
 ])
 urlpatterns += router.urls

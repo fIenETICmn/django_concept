@@ -4,7 +4,18 @@ from blog.api.serializers import UserSerializer, PostSerializer, CategorySeriali
 from rest_framework import viewsets
 from rest_framework import permissions
 from .permissions import IsOwnerOrReadOnly
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.views import APIView
+from rest_framework.response import Response
 # from rest_framework import permissions
+
+
+class HelloView(APIView):
+    permission_classes = (IsAuthenticated,)             # <-- And here
+
+    def get(self, request):
+        content = {'message': 'Hello, World!'}
+        return Response(content)
 
 
 class UserViewSet(viewsets.ModelViewSet):
