@@ -19,9 +19,9 @@ def search(request):
     if len(query) > 50:
         allpost = Product.objects.none()
     else:
-        allpost = Product.objects.filter(Q(name__icontains=query)|
-                                        Q(category__categoryname__icontains=query)|
-                                        Q(description__icontains=query))
+        allpost = Product.objects.filter(Q(name__icontains=query) |
+                                         Q(category__categoryname__icontains=query) |
+                                         Q(description__icontains=query))
     if allpost.count() == 0:
         messages.error(request, 'can not found')
     return render(request, 'search.html', {'allpost': allpost, 'query': query})
@@ -65,23 +65,43 @@ def add_product(request):
     return render(request, 'add_product.html', {'form': form})
 
 
+def product_edit(request, pk):
+    post = get_object_or_404(Product, pk=pk)
+    if request.method == "POST":
+        form = ProductForm(request.POST, request.FILES, instance=post)
+        if form.is_valid():
+            post = form.save()
+            post.author = request.user
+            post.save()
+            return redirect('product_list')
+    else:
+        form = ProductForm(instance=post)
+    return render(request, 'product_edit.html', {'form': form})
+
+
+def product_del(request, pk):
+    post = get_object_or_404(Product, pk=pk)
+    post.delete()
+    return redirect('product_list')
+
+
 @login_required
 def user_product(request):
     userproduct = Product.objects.filter(Q(author=request.user))
-    #print(posts.query)
+    # print(posts.query)
     return render(request, 'user_product.html', {'userproduct': userproduct})
 
 
-def product_publish(request,pk):
-    post =Product.objects.get(pk=pk)
-    if post.published== 0:
-        post.published= 1
+def product_publish(request, pk):
+    post = Product.objects.get(pk=pk)
+    if post.published == 0:
+        post.published = 1
         post.save()
-        messages.info(request,'product is published')
-    elif post.published== 1:
-        post.published= 0
+        messages.info(request, 'product is published')
+    elif post.published == 1:
+        post.published = 0
         post.save()
-        messages.info(request,'product is unpublished')
+        messages.info(request, 'product is unpublished')
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 
@@ -107,11 +127,11 @@ def filter_product(request):
     return render(request, 'product_list.html', {'fill_products': fill_products})
 
 
-def add_to_wishlist(request,pk):
+def add_to_wishlist(request, pk):
     user = request.user
-    items = get_object_or_404(Product,pk=pk)
-    wished_item,created = Wish.objects.get_or_create(item=items, pk=items.pk, user=user,)
-    messages.info(request,'The item was added to your wishlist')
+    items = get_object_or_404(Product, pk=pk)
+    wished_item, created = Wish.objects.get_or_create(item=items, pk=items.pk, user=user, )
+    messages.info(request, 'The item was added to your wishlist')
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 
@@ -123,7 +143,7 @@ def wishlist_view(request):
     if wishs.exists():
         if wishs.exists():
             wish = wishs[0]
-            return render(request,'wishlist.html', {'productw': productw, 'wishs': wishs})
+            return render(request, 'wishlist.html', {'productw': productw, 'wishs': wishs})
         else:
             messages.warning(request, "You do not have any item in your Cart")
             return redirect("product_list")
@@ -131,13 +151,13 @@ def wishlist_view(request):
         messages.warning(request, "You do not have any item in your Cart")
         return redirect("product_list")
 
-    return render(request, 'wishlist.html',{'wishs':wishs})
+    return render(request, 'wishlist.html', {'wishs': wishs})
 
 
 @login_required
-def remove_wish(request,pk):
-    item=get_object_or_404(Product,pk=pk)
-    remove_list=Wish.objects.filter(item=item.pk,user=request.user)
+def remove_wish(request, pk):
+    item = get_object_or_404(Product, pk=pk)
+    remove_list = Wish.objects.filter(item=item.pk, user=request.user)
     remove_list.delete()
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
@@ -184,13 +204,13 @@ def cart_view(request):
 
 
 def delete_cart(request, pk):
-    item=get_object_or_404(Product, pk=pk)
-    order_qs=Order.objects.filter(user=request.user, ordered=False)
+    item = get_object_or_404(Product, pk=pk)
+    order_qs = Order.objects.filter(user=request.user, ordered=False)
     if order_qs.exists():
-        order=order_qs[0]
-        #check if the order item is the order
+        order = order_qs[0]
+        # check if the order item is the order
         if order.orderitems.filter(item=item.pk).exists():
-            order_item=Cart.objects.filter(item=item, user=request.user)[0]
+            order_item = Cart.objects.filter(item=item, user=request.user)[0]
             order.orderitems.remove(order_item)
             order_item.delete()
             messages.warning(request, f"{item.name} has removed from your cart.")
@@ -208,9 +228,9 @@ def decreaseCart(request, pk):
     order_qs = Order.objects.filter(user=request.user, ordered=False)
     if order_qs.exists():
         order = order_qs[0]
-        #check if the order item is in the order
+        # check if the order item is in the order
         if order.orderitems.filter(item=item.pk).exists():
-            order_item=Cart.objects.filter(item=item, user=request.user)[0]
+            order_item = Cart.objects.filter(item=item, user=request.user)[0]
             if order_item.quantity > 1:
                 order_item.quantity -= 1
                 order_item.save()

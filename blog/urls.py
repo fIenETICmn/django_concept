@@ -15,8 +15,8 @@ urlpatterns = [
     path('filter_product/', views.filter_product, name='filter_product'),
     path('user_product/', views.user_product, name='user_product'),
     path('product_publish/<int:pk>', views.product_publish, name='product_publish'),
-    # path('product/<int:pk>/edit/', views.product_edit, name='product_edit'),
-    # path('product_del/<int:pk>/', views.product_del, name='product_del'),
+    path('product/<int:pk>/edit/', views.product_edit, name='product_edit'),
+    path('product_del/<int:pk>/', views.product_del, name='product_del'),
     # Category URL
     path('category_list/', views.category_list, name='category_list'),
     path('category_product_list/<int:pk>/', views.category_product_list, name='category_product_list'),

@@ -2,6 +2,8 @@ from blog.models import User, Post, Category, Store, Product, Productimage
 from blog.api.serializers import UserSerializer, PostSerializer, CategorySerializer, \
     StoreSerializer, ProductSerializer, ProductimageSerializer
 from rest_framework import viewsets
+from rest_framework import permissions
+from .permissions import IsOwnerOrReadOnly
 # from rest_framework import permissions
 
 
@@ -13,6 +15,7 @@ class UserViewSet(viewsets.ModelViewSet):
 class PostViewSet(viewsets.ModelViewSet):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
 
 
 class CategoryViewSet(viewsets.ModelViewSet):

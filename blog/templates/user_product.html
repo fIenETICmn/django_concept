@@ -11,9 +11,11 @@
                         <p>{{ pro.price|linebreaksbr }}</p>
                         <p>{{ pro.description|linebreaksbr }}</p>
                         <p>{{ pro.category|linebreaksbr }}</p>
-                         <a href="{% url 'add_to_cart' pro.pk %}">Add to Cart</a>
+                        <a href="{% url 'product_edit' pro.pk %}">Product Edit</a>
+                        <a href="{% url 'product_del' pro.pk %}">Product Delete</a>
+                        <a href="{% url 'add_to_cart' pro.pk %}">Add to Cart</a>
                         <a href="{% url 'add_to_wishlist' pro.pk %}">Add to Wishlist</a>
-                        {% if p.published == 1 %}
+                        {% if pro.published == 1 %}
                         <button><a href="{% url 'product_publish' pro.pk%}">published</a></button>
                         {% else  %}
                         <button><a href="{% url 'product_publish' pro.pk%}">unpublished</a></button>
