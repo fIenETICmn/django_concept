@@ -335,16 +335,6 @@ def store_product_list(request, pk):
     return render(request, 'store_product_list.html', {'store_product': store_product})
 
 
-def login_view(request):
-    if request.method == 'POST':
-        form = AuthenticationForm(data=request.POST)
-        if form.is_valid():
-            return redirect('post_list')
-    else:
-        form = AuthenticationForm()
-    return render(request, 'login.html', {'form': form})
-
-
 def signup(request):
     if request.method == 'POST':
         form = SignupForm(request.POST)
@@ -357,10 +347,20 @@ def signup(request):
             return redirect('post_list')
     else:
         form = SignupForm()
-    return render(request, 'signup.html', {'form': form})
+    return render(request, 'registration/signup.html', {'form': form})
 
 
-def logout_view(request):
-    if request.method == 'POST':
-        logout(request)
-        return redirect('home')
+# def login_view(request):
+#     if request.method == 'POST':
+#         form = AuthenticationForm(data=request.POST)
+#         if form.is_valid():
+#             return redirect('post_list')
+#     else:
+#         form = AuthenticationForm()
+#     return render(request, 'registration/login.html', {'form': form})
+
+
+# def logout_view(request):
+#     if request.method == 'POST':
+#         logout(request)
+#         return redirect('home')
